@@ -15,7 +15,7 @@ export function getConnectionString(databaseCredentials: EnvironmentDatabaseCred
 }
 
 export async function setupDatabase(adapterOptions: EnvironmentAdapterOptions) {
-  const { connectionString, databaseName, databaseSchema } = adapterOptions as MysqlEnvironmentAdapterOptions
+  const { connectionString, databaseName, databaseSchema, seed } = adapterOptions as MysqlEnvironmentAdapterOptions
 
   const strippedConnectionString = connectionString.replace(`_${databaseSchema}`, '')
 
@@ -25,6 +25,10 @@ export async function setupDatabase(adapterOptions: EnvironmentAdapterOptions) {
   client.destroy()
 
   await execSync(`${prismaBinary} migrate deploy`)
+
+  if (seed) {
+    await execSync(`node --loader ts-node/esm ${seed}`)
+  }
 }
 
 export async function teardownDatabase(adapterOptions: EnvironmentAdapterOptions) {

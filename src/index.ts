@@ -19,7 +19,8 @@ export default <Environment>{
     const {
       adapter = 'mysql',
       envFile = '.env.test',
-      schemaPrefix = ''
+      schemaPrefix = '',
+      seed
     } = options as PrismaEnvironmentOptions
 
     if (!Object.keys(supportedAdapters).includes(adapter)) {
@@ -67,7 +68,8 @@ export default <Environment>{
     const adapterOptions = {
       connectionString,
       databaseName: dbName,
-      databaseSchema: dbSchema
+      databaseSchema: dbSchema,
+      seed
     }
 
     await selectedAdapter.setupDatabase(adapterOptions)
